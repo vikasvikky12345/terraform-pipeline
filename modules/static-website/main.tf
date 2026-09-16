@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "website_bucket" {
-  bucket = "${var.bucket_name}-${data.aws_caller_identity.current.account_id}"
+  bucket = "${var.bucket_name}-${var.environment}-${data.aws_caller_identity.current.account_id}"
   tags   = var.tags
 }
 resource "aws_s3_bucket_public_access_block" "website_bucket_public_access_block" {
@@ -14,24 +14,24 @@ resource "aws_s3_bucket_public_access_block" "website_bucket_public_access_block
 resource "aws_s3_object" "index" {
   bucket       = aws_s3_bucket.website_bucket.id
   key          = "index.html"
-  source       = "${path.module}/www/index.html"
-  etag         = filemd5("${path.module}/www/index.html")
+  source       = "${var.website_dir}/index.html"
+  etag         = filemd5("${var.website_dir}/index.html")
   content_type = "text/html"
 }
 
 resource "aws_s3_object" "css" {
   bucket       = aws_s3_bucket.website_bucket.id
   key          = "style.css"
-  source       = "${path.module}/www/style.css"
-  etag         = filemd5("${path.module}/www/style.css")
+  source       = "${var.website_dir}/style.css"
+  etag         = filemd5("${var.website_dir}/style.css")
   content_type = "text/css"
 }
 
 resource "aws_s3_object" "js" {
   bucket       = aws_s3_bucket.website_bucket.id
   key          = "script.js"
-  source       = "${path.module}/www/script.js"
-  etag         = filemd5("${path.module}/www/script.js")
+  source       = "${var.website_dir}/script.js"
+  etag         = filemd5("${var.website_dir}/script.js")
   content_type = "application/javascript"
 }
 resource "aws_cloudfront_origin_access_control" "website" {
