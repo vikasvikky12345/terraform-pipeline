@@ -14,3 +14,4 @@ output "website_bucket_region" {
 output "cloudfront_url" {
   value = "https://${aws_cloudfront_distribution.website.domain_name}"
 }
+
